@@ -113,22 +113,12 @@ public:
 
   void write_state(light::LightState *state) override
   {
-    // Handle turn off
-    if (!state->current_values.is_on()) {
-      this->red_->set_level(0.0);
-      this->green_->set_level(0.0);
-      this->blue_->set_level(0.0);
-      this->warm_white_->set_level(0.0);
-      this->cold_white_->set_level(0.0);
-      return;
-    }
-
     float cwhite = 0.0, wwhite = 0.0;
     float red = state->current_values.get_red();
     float green = state->current_values.get_green();
     float blue = state->current_values.get_blue();
     float colorTemp = state->current_values.get_color_temperature();
-    const float brightness = state->current_values.get_brightness();
+    const float brightness = state->current_values.get_brightness() * state->current_values.get_state();
     const bool white_changed = this->last_color_temp_ != colorTemp;
     const bool color_changed = this->last_rgb_ != red + green + blue;
 
