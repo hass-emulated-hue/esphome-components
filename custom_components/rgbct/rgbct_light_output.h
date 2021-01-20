@@ -113,7 +113,7 @@ public:
   void set_rgb_light_(float red, float green, float blue, float brightness)
   {
     // set gamma from color
-    this->rgb_light_->set_gamma_correct(0);
+    // this->rgb_light_->set_gamma_correct(0);
     if (red + green + blue == 0) {
       light::LightCall call = this->rgb_light_->turn_off();
       call.perform();
