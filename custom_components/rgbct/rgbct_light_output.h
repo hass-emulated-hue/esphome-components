@@ -196,9 +196,11 @@ public:
     cwhite = clamp(cwhite, 0.0f, 1.0f);
 
     if (state->current_values.is_on()) {
+      float rgb_brightness_shift = (brightness > 0.9) ? brightness : brightness - 0.1;
+      rgb_brightness_shift = clamp(rgb_brightness_shift, 0.01f, 1.0f);
       light::LightCall call = this->rgb_light_->turn_on();
       call.set_rgb(red, green, blue);
-      call.set_brightness(brightness);
+      call.set_brightness(rgb_brightness_shift);
       call.perform();
     } else {
       light::LightCall call = this->rgb_light_->turn_off();
