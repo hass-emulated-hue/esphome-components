@@ -110,24 +110,6 @@ public:
     return traits;
   }
 
-  void set_rgb_light_(float red, float green, float blue, float brightness)
-  {
-    // set gamma from color
-    // this->rgb_light_->set_gamma_correct(0);
-    if (red + green + blue == 0) {
-      light::LightCall call = this->rgb_light_->turn_off();
-      call.perform();
-    } else {
-      light::LightCall call = this->rgb_light_->turn_on();
-      call.set_rgb(red, green, blue);
-      // we are a pseudo layer, transition length must be 0
-      // to properly display light levels
-      // call.set_transition_length(0);
-      call.set_brightness(brightness);
-      call.perform();
-    }
-  }
-
   void write_state(light::LightState *state) override
   {
     float cwhite = 0.0, wwhite = 0.0;
@@ -213,7 +195,15 @@ public:
     wwhite = clamp(wwhite, 0.0f, 1.0f);
     cwhite = clamp(cwhite, 0.0f, 1.0f);
 
-    this->set_rgb_light_(red, green, blue, brightness);
+    if (state->current_values.is_on()) {
+      light::LightCall call = this->rgb_light_->turn_on();
+      call.set_rgb(red, green, blue);
+      call.set_brightness(brightness);
+      call.perform();
+    } else {
+      light::LightCall call = this->rgb_light_->turn_off();
+      call.perform();
+    }
     this->warm_white_->set_level(wwhite);
     this->cold_white_->set_level(cwhite);
   }
