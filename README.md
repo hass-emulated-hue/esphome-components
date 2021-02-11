@@ -14,15 +14,29 @@ Create a real Philips HUE Lightstrip look-a-like with ESPHome and RGB+CT lightst
 1. Copy custom_components folder into esphome config directory (e.g. /config/esphome).
 2. Use configuration from below.
 
+### Why use a light and float outputs instead of just float outputs?
+This allows for support of FastLED devices combined with CT channels. ESPHome currently
+has no way of providing outputs for FastLED devices. Usage of an internal light and 
+float outputs allows for a greater variety of devices to be supported.
+
+### Why not use a CWWW Light as well?
+ESPHome has no way to currently directly set the float outputs once abstracted behind
+a light states. Float outputs are required to individually control both CT channels.
+
 **Example ESpHome config:**
 
 ```
 light:
-  - platform: rgbct
-    name: "${device_name}: RGBCT Light"
+  - platform: rgb
+    id: color_led
+    internal: true
     red: pwm_r
     green: pwm_g
     blue: pwm_b
+
+  - platform: rgbct
+    name: "${device_name}: RGBCT Light"
+    rgb_light: color_led
     warm_white: pwm_ww
     cold_white: pwm_cw
     cold_white_color_temperature: 6500 K

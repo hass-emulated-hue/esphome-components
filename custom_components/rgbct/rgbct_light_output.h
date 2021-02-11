@@ -3,6 +3,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/output/float_output.h"
 #include "esphome/components/light/light_output.h"
+#include "esphome/components/light/light_state.h"
 #include <float.h>
 #include <math.h>
 #define LERP(a, b, c) (((b) - (a)) * (c) + (a))
@@ -91,9 +92,7 @@ namespace rgbct
 class RGBCTLightOutput : public light::LightOutput
 {
 public:
-  void set_red(output::FloatOutput *red) { red_ = red; }
-  void set_green(output::FloatOutput *green) { green_ = green; }
-  void set_blue(output::FloatOutput *blue) { blue_ = blue; }
+  void set_rgb_light(light::LightState *rgb_light) { rgb_light_ = rgb_light; }
   void set_cold_white(output::FloatOutput *cold_white) { cold_white_ = cold_white; }
   void set_warm_white(output::FloatOutput *warm_white) { warm_white_ = warm_white; }
   void set_cold_white_temperature(float cold_white_temperature) { cold_white_temperature_ = cold_white_temperature; }
@@ -188,9 +187,6 @@ public:
     // apply brightness
     cwhite = cwhite * brightness;
     wwhite = wwhite * brightness;
-    red = red * brightness;
-    green = green * brightness;
-    blue = blue * brightness;
 
     // actually set the new values
     red = clamp(red, 0.0f, 1.0f);
@@ -199,17 +195,21 @@ public:
     wwhite = clamp(wwhite, 0.0f, 1.0f);
     cwhite = clamp(cwhite, 0.0f, 1.0f);
 
-    this->red_->set_level(red);
-    this->green_->set_level(green);
-    this->blue_->set_level(blue);
+    if (state->current_values.is_on()) {
+      light::LightCall call = this->rgb_light_->turn_on();
+      call.set_rgb(red, green, blue);
+      call.set_brightness(brightness);
+      call.perform();
+    } else {
+      light::LightCall call = this->rgb_light_->turn_off();
+      call.perform();
+    }
     this->warm_white_->set_level(wwhite);
     this->cold_white_->set_level(cwhite);
   }
 
 protected:
-  output::FloatOutput *red_;
-  output::FloatOutput *green_;
-  output::FloatOutput *blue_;
+  light::LightState *rgb_light_;
   output::FloatOutput *cold_white_;
   output::FloatOutput *warm_white_;
   float cold_white_temperature_;
