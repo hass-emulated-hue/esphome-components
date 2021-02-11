@@ -8,6 +8,7 @@ Create a real Philips HUE Lightstrip look-a-like with ESPHome and RGB+CT lightst
 - Allows mixing rgb leds for color temperature outside of range of the white leds.
 - Same behaviour as native Hue lights in HA: RGB and white combiend into single light.
 - Can be 100% color matched with other HUE lights.
+- Also works with light bulbs
 
 ### Installation:
 1. Copy custom_components folder into esphome config directory (e.g. /config/esphome).
