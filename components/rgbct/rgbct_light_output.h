@@ -154,9 +154,9 @@ public:
           blue = 255;
         }
       
-      red = (clamp(red, 0, 255) / 255.0f);
-      green = (clamp(green, 0, 255) / 255.0f);
-      blue = (clamp(blue, 0, 255) / 255.0f);
+      red = (clamp<float>(red, 0, 255) / 255.0f);
+      green = (clamp<float>(green, 0, 255) / 255.0f);
+      blue = (clamp<float>(blue, 0, 255) / 255.0f);
 
 
       const float ww_fraction = (colorTemp - this->cold_white_temperature_) / (this->warm_white_temperature_ - this->cold_white_temperature_);
@@ -193,11 +193,11 @@ public:
     blue = blue * brightness;
 
     // actually set the new values
-    red = clamp(red, 0.0f, 1.0f);
-    green = clamp(green, 0.0f, 1.0f);
-    blue = clamp(blue, 0.0f, 1.0f);
-    wwhite = clamp(wwhite, 0.0f, 1.0f);
-    cwhite = clamp(cwhite, 0.0f, 1.0f);
+    red = clamp<float>(red, 0.0f, 1.0f);
+    green = clamp<float>(green, 0.0f, 1.0f);
+    blue = clamp<float>(blue, 0.0f, 1.0f);
+    wwhite = clamp<float>(wwhite, 0.0f, 1.0f);
+    cwhite = clamp<float>(cwhite, 0.0f, 1.0f);
 
     this->red_->set_level(red);
     this->green_->set_level(green);
