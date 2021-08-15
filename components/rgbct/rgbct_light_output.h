@@ -98,16 +98,22 @@ class RGBCTLightOutput : public light::LightOutput {
     blue = (blue > 0.04045f) ? pow((blue + 0.055f) / (1.0f + 0.055f), 2.4f) : (blue / 12.92f);
 
     // apply brightness
-    cwhite = cwhite * brightness;
-    wwhite = wwhite * brightness;
     red = red * brightness;
     green = green * brightness;
     blue = blue * brightness;
 
-    if (this->constant_brightness_ && (cwhite > 0 || wwhite > 0)) {
-      const float sum = cwhite + wwhite;
-      cwhite /= sum;
-      wwhite /= sum;
+    if (!constant_brightness) {
+      cwhite = brightness * cwhite;
+      wwhite = brightness * wwhite;
+    } else {
+      // Just multiplying by cw_level / (cw_level + ww_level) would divide out the brightness information from the
+      // cold_white and warm_white settings (i.e. cw=0.8, ww=0.4 would be identical to cw=0.4, ww=0.2), which breaks
+      // transitions. Use the highest value as the brightness for the white channels (the alternative, using cw+ww/2,
+      // reduces to cw/2 and ww/2, which would still limit brightness to 100% of a single channel, but isn't very
+      // useful in all other aspects -- that behaviour can also be achieved by limiting the output power).
+      const float sum = cwhite > 0 || wwhite > 0 ? cwhite + wwhite : 1;  // Don't divide by zero.
+      cwhite = brightness * std::max(cwhite, wwhite) * cwhite / sum;
+      wwhite = brightness * std::max(cwhite, wwhite) * wwhite / sum;
     }
 
     // actually set the new values
