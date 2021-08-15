@@ -14,6 +14,7 @@ class RGBCTLightOutput : public light::LightOutput {
   void set_blue(output::FloatOutput *blue) { this->blue_ = blue; }
   void set_cold_white(output::FloatOutput *cold_white) { this->cold_white_ = cold_white; }
   void set_warm_white(output::FloatOutput *warm_white) { this->warm_white_ = warm_white; }
+  void set_constant_brightness(bool constant_brightness) { this->constant_brightness_ = constant_brightness; }
   void set_cold_white_temperature(float cold_white_temperature) {
     this->cold_white_temperature_ = cold_white_temperature;
   }
@@ -103,6 +104,12 @@ class RGBCTLightOutput : public light::LightOutput {
     green = green * brightness;
     blue = blue * brightness;
 
+    if (this->constant_brightness_ && (cwhite > 0 || wwhite > 0)) {
+      const float sum = cwhite + wwhite;
+      cwhite /= sum;
+      wwhite /= sum;
+    }
+
     // actually set the new values
     red = clamp<float>(red, 0.0f, 1.0f);
     green = clamp<float>(green, 0.0f, 1.0f);
@@ -123,6 +130,7 @@ class RGBCTLightOutput : public light::LightOutput {
   output::FloatOutput *blue_;
   output::FloatOutput *cold_white_;
   output::FloatOutput *warm_white_;
+  bool constant_brightness_;
   float cold_white_temperature_;
   float warm_white_temperature_;
   float red_correct_;

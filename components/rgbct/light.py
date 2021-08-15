@@ -1,28 +1,43 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import light, output
-from esphome.const import CONF_BLUE, CONF_GREEN, CONF_RED, CONF_OUTPUT_ID, CONF_COLD_WHITE, \
-    CONF_WARM_WHITE, CONF_COLD_WHITE_COLOR_TEMPERATURE, \
-    CONF_WARM_WHITE_COLOR_TEMPERATURE
+from esphome.const import (
+    CONF_BLUE,
+    CONF_GREEN,
+    CONF_RED,
+    CONF_OUTPUT_ID,
+    CONF_COLD_WHITE,
+    CONF_WARM_WHITE,
+    CONF_COLD_WHITE_COLOR_TEMPERATURE,
+    CONF_WARM_WHITE_COLOR_TEMPERATURE,
+)
 
-rgbct_ns = cg.esphome_ns.namespace('rgbct')
-RGBCTLightOutput = rgbct_ns.class_('RGBCTLightOutput', light.LightOutput)
+rgbct_ns = cg.esphome_ns.namespace("rgbct")
+RGBCTLightOutput = rgbct_ns.class_("RGBCTLightOutput", light.LightOutput)
 
 CONF_MAX_WARM_COLOR_TEMPERATURE = "max_warm_color_temperature"
 CONF_MAX_COLD_COLOR_TEMPERATURE = "max_cold_color_temperature"
+CONF_CONSTANT_BRIGHTNESS = "constant_brightness"
 
-CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend({
-    cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(RGBCTLightOutput),
-    cv.Required(CONF_RED): cv.use_id(output.FloatOutput),
-    cv.Required(CONF_GREEN): cv.use_id(output.FloatOutput),
-    cv.Required(CONF_BLUE): cv.use_id(output.FloatOutput),
-    cv.Required(CONF_COLD_WHITE): cv.use_id(output.FloatOutput),
-    cv.Required(CONF_WARM_WHITE): cv.use_id(output.FloatOutput),
-    cv.Required(CONF_COLD_WHITE_COLOR_TEMPERATURE): cv.color_temperature,
-    cv.Required(CONF_WARM_WHITE_COLOR_TEMPERATURE): cv.color_temperature,
-    cv.Optional(CONF_MAX_WARM_COLOR_TEMPERATURE, default="500 mireds"): cv.color_temperature,
-    cv.Optional(CONF_MAX_COLD_COLOR_TEMPERATURE, default="153 mireds"): cv.color_temperature,
-})
+CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend(
+    {
+        cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(RGBCTLightOutput),
+        cv.Required(CONF_RED): cv.use_id(output.FloatOutput),
+        cv.Required(CONF_GREEN): cv.use_id(output.FloatOutput),
+        cv.Required(CONF_BLUE): cv.use_id(output.FloatOutput),
+        cv.Required(CONF_COLD_WHITE): cv.use_id(output.FloatOutput),
+        cv.Required(CONF_WARM_WHITE): cv.use_id(output.FloatOutput),
+        cv.Required(CONF_COLD_WHITE_COLOR_TEMPERATURE): cv.color_temperature,
+        cv.Required(CONF_WARM_WHITE_COLOR_TEMPERATURE): cv.color_temperature,
+        cv.Optional(
+            CONF_MAX_WARM_COLOR_TEMPERATURE, default="500 mireds"
+        ): cv.color_temperature,
+        cv.Optional(
+            CONF_MAX_COLD_COLOR_TEMPERATURE, default="153 mireds"
+        ): cv.color_temperature,
+        cv.Optional(CONF_CONSTANT_BRIGHTNESS, default=False): cv.boolean,
+    }
+)
 
 
 def to_code(config):
@@ -48,3 +63,4 @@ def to_code(config):
 
     cg.add(var.set_max_warm_color_temperature(config[CONF_MAX_WARM_COLOR_TEMPERATURE]))
     cg.add(var.set_max_cold_color_temperature(config[CONF_MAX_COLD_COLOR_TEMPERATURE]))
+    cg.add(var.set_constant_brightness(config[CONF_CONSTANT_BRIGHTNESS]))
