@@ -30,6 +30,8 @@ light:
     # In Kelvin or Mireds
     max_warm_color_temperature: 500 mireds  # Optional defaults to 500 mireds
     max_cold_color_temperature: 153 mireds  # Optional defaults to 153 mireds
+    constant_brightness: false  # Optional defaults to false, make white brightness levels combine to max_combined_white_level
+    max_combined_white_level: 1  # Optional defaults to 1, reduce if light is unable to support max brightness
 
 output:
   - platform: esp8266_pwm

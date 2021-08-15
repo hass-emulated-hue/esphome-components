@@ -29,6 +29,9 @@ class RGBCTLightOutput : public light::LightOutput {
     // Colder colors = < mireds
     this->min_color_temperature_ = cold_color_temperature;
   }
+  void set_max_combined_white_level(float max_combined_white_level) {
+    this->max_combined_white_level_ = max_combined_white_level;
+  }
 
   light::LightTraits get_traits() override {
     auto traits = light::LightTraits();
@@ -98,22 +101,23 @@ class RGBCTLightOutput : public light::LightOutput {
     blue = (blue > 0.04045f) ? pow((blue + 0.055f) / (1.0f + 0.055f), 2.4f) : (blue / 12.92f);
 
     // apply brightness
+    cwhite = cwhite * brightness;
+    wwhite = wwhite * brightness;
     red = red * brightness;
     green = green * brightness;
     blue = blue * brightness;
 
-    if (!constant_brightness_) {
-      cwhite = brightness * cwhite;
-      wwhite = brightness * wwhite;
-    } else {
+    if (constant_brightness_) {
       // Just multiplying by cw_level / (cw_level + ww_level) would divide out the brightness information from the
       // cold_white and warm_white settings (i.e. cw=0.8, ww=0.4 would be identical to cw=0.4, ww=0.2), which breaks
       // transitions. Use the highest value as the brightness for the white channels (the alternative, using cw+ww/2,
       // reduces to cw/2 and ww/2, which would still limit brightness to 100% of a single channel, but isn't very
       // useful in all other aspects -- that behaviour can also be achieved by limiting the output power).
       const float sum = cwhite > 0 || wwhite > 0 ? cwhite + wwhite : 1;  // Don't divide by zero.
-      cwhite = brightness * std::max(cwhite, wwhite) * cwhite / sum;
-      wwhite = brightness * std::max(cwhite, wwhite) * wwhite / sum;
+      // Obtain total brightness then apply max limiter
+      const float white_level = std::min(this->max_combined_white_level_, std::max(cwhite, wwhite));
+      cwhite = brightness * white_level * cwhite / sum;
+      wwhite = brightness * white_level * wwhite / sum;
     }
 
     // actually set the new values
@@ -147,6 +151,7 @@ class RGBCTLightOutput : public light::LightOutput {
   float brightness_correct_;
   float min_color_temperature_;
   float max_color_temperature_;
+  float max_combined_white_level_;
 };
 
 }  // namespace rgbct

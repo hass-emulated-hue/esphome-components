@@ -18,6 +18,7 @@ RGBCTLightOutput = rgbct_ns.class_("RGBCTLightOutput", light.LightOutput)
 CONF_MAX_WARM_COLOR_TEMPERATURE = "max_warm_color_temperature"
 CONF_MAX_COLD_COLOR_TEMPERATURE = "max_cold_color_temperature"
 CONF_CONSTANT_BRIGHTNESS = "constant_brightness"
+CONF_MAX_COMBINED_WHITE_LEVEL = "max_combined_white_level"
 
 CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend(
     {
@@ -36,6 +37,7 @@ CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend(
             CONF_MAX_COLD_COLOR_TEMPERATURE, default="153 mireds"
         ): cv.color_temperature,
         cv.Optional(CONF_CONSTANT_BRIGHTNESS, default=False): cv.boolean,
+        cv.Optional(CONF_MAX_COMBINED_WHITE_LEVEL, default=1): cv.zero_to_one_float,
     }
 )
 
@@ -64,3 +66,4 @@ def to_code(config):
     cg.add(var.set_max_warm_color_temperature(config[CONF_MAX_WARM_COLOR_TEMPERATURE]))
     cg.add(var.set_max_cold_color_temperature(config[CONF_MAX_COLD_COLOR_TEMPERATURE]))
     cg.add(var.set_constant_brightness(config[CONF_CONSTANT_BRIGHTNESS]))
+    cg.add(var.set_max_combined_white_level(config[CONF_MAX_COMBINED_WHITE_LEVEL]))
