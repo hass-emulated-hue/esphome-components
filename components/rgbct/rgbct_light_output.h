@@ -37,15 +37,10 @@ public:
     float blue = state->current_values.get_blue();
     float colorTemp = state->current_values.get_color_temperature();
     const float brightness = state->current_values.get_brightness() * state->current_values.get_state();
-    const bool white_changed = this->last_color_temp_ != colorTemp;
-    const bool color_changed = this->last_rgb_ != red + green + blue;
+    const bool is_ct_mode = state->current_values.get_color_mode() == light::ColorMode::COLOR_TEMPERATURE;
 
-    if (white_changed || (this->white_active && !color_changed) || (red == 1.0 && green == 1.0 && blue == 1.0))
-    {
-      /// Set by color temperature / white level
-      this->white_active = true;
-      this->last_color_temp_ = colorTemp;
-      
+    if (is_ct_mode)
+    {      
       // colortemp to rgb calculations based on the work of Tanner Helland
       // https://tannerhelland.com/2012/09/18/convert-temperature-rgb-algorithm-code.html
 
@@ -90,13 +85,6 @@ public:
         wwhite = (1.0f - ((colorTemp - this->warm_white_temperature_) / 100));
 
     }
-    else if (color_changed || !this->white_active)
-    {
-      // RGB color setting
-      this->white_active = false;
-      this->last_rgb_ = red + green + blue;
-
-    }
 
     // apply gamma correction
     red = (red > 0.04045f) ? pow((red + 0.055f) / (1.0f + 0.055f), 2.4f) : (red / 12.92f);
@@ -138,9 +126,6 @@ protected:
   float cwhite_correct_;
   float wwhite_correct_;
   float brightness_correct_;
-  float last_color_temp_;
-  float last_rgb_{0.0};
-  bool white_active{false};
 };
 
 } // namespace rgbct
