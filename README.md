@@ -27,6 +27,9 @@ light:
     cold_white: pwm_cw
     cold_white_color_temperature: 6500 K
     warm_white_color_temperature: 2400 K
+    # In Kelvin or Mireds
+    min_color_temperature: 153 mireds  # Optional defaults to 153 mireds
+    max_color_temperature: 500 mireds  # Optional defaults to 500 mireds
 
 output:
   - platform: esp8266_pwm
@@ -57,3 +60,5 @@ In the example above replace the correct values for the GPIO pins.
 Adjust max_power setting for each channel to match your lightstrip.
 Above settings were tested using a (very common) 24V RGB-CT 5050 ledstrip from Amazon/Ali.
 Adjust the levels until the light exactly matches.
+
+Adjust min/max color temperature of light as desired.

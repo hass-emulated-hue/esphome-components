@@ -8,6 +8,9 @@ from esphome.const import CONF_BLUE, CONF_GREEN, CONF_RED, CONF_OUTPUT_ID, CONF_
 rgbct_ns = cg.esphome_ns.namespace('rgbct')
 RGBCTLightOutput = rgbct_ns.class_('RGBCTLightOutput', light.LightOutput)
 
+CONF_MIN_COLOR_TEMPERATURE = "min_color_temperature"
+CONF_MAX_COLOR_TEMPERATURE = "max_color_temperature"
+
 CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend({
     cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(RGBCTLightOutput),
     cv.Required(CONF_RED): cv.use_id(output.FloatOutput),
@@ -17,6 +20,8 @@ CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend({
     cv.Required(CONF_WARM_WHITE): cv.use_id(output.FloatOutput),
     cv.Required(CONF_COLD_WHITE_COLOR_TEMPERATURE): cv.color_temperature,
     cv.Required(CONF_WARM_WHITE_COLOR_TEMPERATURE): cv.color_temperature,
+    cv.Optional(CONF_MIN_COLOR_TEMPERATURE, default="153 mireds"): cv.color_temperature,
+    cv.Optional(CONF_MAX_COLOR_TEMPERATURE, default="500 mireds"): cv.color_temperature,
 })
 
 
@@ -41,3 +46,5 @@ def to_code(config):
     cg.add(var.set_warm_white(wwhite))
     cg.add(var.set_warm_white_temperature(config[CONF_WARM_WHITE_COLOR_TEMPERATURE]))
 
+    cg.add(var.set_min_color_temperature(config[CONF_MIN_COLOR_TEMPERATURE]))
+    cg.add(var.set_max_color_temperature(config[CONF_MAX_COLOR_TEMPERATURE]))
