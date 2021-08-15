@@ -102,7 +102,7 @@ class RGBCTLightOutput : public light::LightOutput {
     green = green * brightness;
     blue = blue * brightness;
 
-    if (!constant_brightness) {
+    if (!constant_brightness_) {
       cwhite = brightness * cwhite;
       wwhite = brightness * wwhite;
     } else {
