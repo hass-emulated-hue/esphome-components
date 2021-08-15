@@ -20,8 +20,14 @@ class RGBCTLightOutput : public light::LightOutput {
   void set_warm_white_temperature(float warm_white_temperature) {
     this->warm_white_temperature_ = warm_white_temperature;
   }
-  void set_min_color_temperature(float min_color_temperature) { this->min_color_temperature_ = min_color_temperature; }
-  void set_max_color_temperature(float max_color_temperature) { this->max_color_temperature_ = max_color_temperature; }
+  void set_max_warm_color_temperature(float warm_color_temperature) {
+    // Warmer colors = > mireds
+    this->max_color_temperature_ = warm_color_temperature;
+  }
+  void set_max_cold_color_temperature(float cold_color_temperature) {
+    // Colder colors = < mireds
+    this->min_color_temperature_ = cold_color_temperature;
+  }
 
   light::LightTraits get_traits() override {
     auto traits = light::LightTraits();

@@ -28,8 +28,8 @@ light:
     cold_white_color_temperature: 6500 K
     warm_white_color_temperature: 2400 K
     # In Kelvin or Mireds
-    min_color_temperature: 153 mireds  # Optional defaults to 153 mireds
-    max_color_temperature: 500 mireds  # Optional defaults to 500 mireds
+    max_warm_color_temperature: 500 mireds  # Optional defaults to 500 mireds
+    max_cold_color_temperature: 153 mireds  # Optional defaults to 153 mireds
 
 output:
   - platform: esp8266_pwm
