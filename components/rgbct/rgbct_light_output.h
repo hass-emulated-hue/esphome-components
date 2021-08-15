@@ -101,13 +101,14 @@ class RGBCTLightOutput : public light::LightOutput {
     blue = (blue > 0.04045f) ? pow((blue + 0.055f) / (1.0f + 0.055f), 2.4f) : (blue / 12.92f);
 
     // apply brightness
-    cwhite = cwhite * brightness;
-    wwhite = wwhite * brightness;
     red = red * brightness;
     green = green * brightness;
     blue = blue * brightness;
 
-    if (constant_brightness_) {
+    if (!constant_brightness_) {
+      cwhite = cwhite * brightness;
+      wwhite = wwhite * brightness;
+    } else {
       // Just multiplying by cw_level / (cw_level + ww_level) would divide out the brightness information from the
       // cold_white and warm_white settings (i.e. cw=0.8, ww=0.4 would be identical to cw=0.4, ww=0.2), which breaks
       // transitions. Use the highest value as the brightness for the white channels (the alternative, using cw+ww/2,
