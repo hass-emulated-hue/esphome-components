@@ -114,11 +114,15 @@ class RGBCTLightOutput : public light::LightOutput {
       // transitions. Use the highest value as the brightness for the white channels (the alternative, using cw+ww/2,
       // reduces to cw/2 and ww/2, which would still limit brightness to 100% of a single channel, but isn't very
       // useful in all other aspects -- that behaviour can also be achieved by limiting the output power).
+
+      // Prevent negatives from cancelling out, causing white to turn on when not intended
+      wwhite = clamp<float>(wwhite, 0.0f, 1.0f);
+      cwhite = clamp<float>(cwhite, 0.0f, 1.0f);
       const float sum = cwhite > 0 || wwhite > 0 ? cwhite + wwhite : 1;  // Don't divide by zero.
       // Obtain total brightness then apply max limiter
       const float white_level = std::min(this->max_combined_white_level_, std::max(cwhite, wwhite));
-      cwhite = brightness * white_level * cwhite / sum;
-      wwhite = brightness * white_level * wwhite / sum;
+      cwhite = brightness * white_level * (cwhite / sum);
+      wwhite = brightness * white_level * (wwhite / sum);
     }
 
     // actually set the new values
