@@ -18,8 +18,8 @@ Create a real Philips HUE Lightstrip look-a-like with ESPHome and RGB+CT lightst
 
 ```
 light:
-  - platform: rgbct
-    name: "${device_name}: RGBCT Light"
+  - platform: rgbcct
+    name: "${device_name}: RGBCCT Light"
     red: pwm_r
     green: pwm_g
     blue: pwm_b

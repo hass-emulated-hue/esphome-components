@@ -5,9 +5,9 @@
 #include "esphome/components/light/light_output.h"
 
 namespace esphome {
-namespace rgbct {
+namespace rgbcct {
 
-class RGBCTLightOutput : public light::LightOutput {
+class RGBCCTLightOutput : public light::LightOutput {
  public:
   void set_red(output::FloatOutput *red) { this->red_ = red; }
   void set_green(output::FloatOutput *green) { this->green_ = green; }
@@ -159,5 +159,5 @@ class RGBCTLightOutput : public light::LightOutput {
   float max_combined_white_level_;
 };
 
-}  // namespace rgbct
+}  // namespace rgbcct
 }  // namespace esphome

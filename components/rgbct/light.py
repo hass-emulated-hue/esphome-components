@@ -12,8 +12,8 @@ from esphome.const import (
     CONF_WARM_WHITE_COLOR_TEMPERATURE,
 )
 
-rgbct_ns = cg.esphome_ns.namespace("rgbct")
-RGBCTLightOutput = rgbct_ns.class_("RGBCTLightOutput", light.LightOutput)
+rgbcct_ns = cg.esphome_ns.namespace("rgbcct")
+RGBCCTLightOutput = rgbcct_ns.class_("RGBCCTLightOutput", light.LightOutput)
 
 CONF_MAX_WARM_COLOR_TEMPERATURE = "max_warm_color_temperature"
 CONF_MAX_COLD_COLOR_TEMPERATURE = "max_cold_color_temperature"
@@ -22,7 +22,7 @@ CONF_MAX_COMBINED_WHITE_LEVEL = "max_combined_white_level"
 
 CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend(
     {
-        cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(RGBCTLightOutput),
+        cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(RGBCCTLightOutput),
         cv.Required(CONF_RED): cv.use_id(output.FloatOutput),
         cv.Required(CONF_GREEN): cv.use_id(output.FloatOutput),
         cv.Required(CONF_BLUE): cv.use_id(output.FloatOutput),
